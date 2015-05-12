@@ -20,7 +20,7 @@ PostSchema.plugin(crate, {
   storage: new LocalFS({
     directory: '/path/to/storage/directory',
     path: function(attachment) { // where the file is stored in the directory - defaults to this function
-      return return '/' + path.basename(attachment.path)
+      return '/' + (attachment.data ? attachment.name : path.basename(attachment.path))
     }
   }),
   fields: {
@@ -37,6 +37,17 @@ var Post = mongoose.model('Post', PostSchema)
 var post = new Post()
 post.attach('image', {path: '/path/to/image'}, function(error) {
   // file is now attached and post.file is populated e.g.:
+  // post.file.url
+})
+```
+
+.. or:
+
+```javascript
+var post = new Post()
+var data = []
+post.attach('image', {name: 'image', data: data}, function(error) {
+  // data is now saved and post.file is populated e.g.:
   // post.file.url
 })
 ```

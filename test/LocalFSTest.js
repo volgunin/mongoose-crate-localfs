@@ -57,6 +57,39 @@ describe('LocalFS', function() {
     })
   })
 
+  it('should store a file from a buffer', function(done) {
+    var targetDirectory = path.join(os.tmpdir(), randomString(20))
+
+    // should not exist yet
+    fs.existsSync(targetDirectory).should.be.false
+
+    var provider = new LocalFS({
+      directory: targetDirectory
+    })
+
+    // make a copy of the file so we don't delete it from the fixtures directory
+    var sourceFile = path.resolve(__dirname + '/./fixtures/node_js_logo.png')
+
+    fs.existsSync(sourceFile).should.be.true
+
+    provider.save({
+      name: path.basename(sourceFile),
+      data: fs.readFileSync(sourceFile)
+    }, function(error, url) {
+      if(error) {
+        throw error
+      }
+
+      // should have created target directory
+      fs.existsSync(targetDirectory).should.be.true
+
+      // data should be saved into directory
+      fs.existsSync(url).should.be.true
+
+      done()
+    })
+  })
+
   it('should delete a file', function(done) {
     var provider = new LocalFS({
       directory: os.tmpdir()
