@@ -73,7 +73,7 @@ describe('LocalFS', function() {
     fs.existsSync(sourceFile).should.be.true
 
     provider.save({
-      name: path.basename(sourceFile),
+      path: 'node_js_logo.png',
       data: fs.readFileSync(sourceFile)
     }, function(error, url) {
       if(error) {
