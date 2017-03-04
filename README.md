@@ -7,11 +7,12 @@ A StorageProvider for mongoose-crate that stores files on the local filesystem.
 ## Usage
 
 ```javascript
-var mongoose = require('mongoose'),
-  crate = require('mongoose-crate'),
-  LocalFS = require('mongoose-crate-localfs')
+const mongoose = require('mongoose')
+const crate = require('mongoose-crate')
+const LocalFS = require('mongoose-crate-localfs')
+const path = require('path')
 
-var PostSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
   title: String,
   description: String
 })
@@ -19,23 +20,21 @@ var PostSchema = new mongoose.Schema({
 PostSchema.plugin(crate, {
   storage: new LocalFS({
     directory: '/path/to/storage/directory',
-    path: function(attachment) { // where the file is stored in the directory - defaults to this function
-      return '/' + path.basename(attachment.path)
-    }
+    path: (attachment) => `/${path.basename(attachment.path)}` // where the file is stored in the directory - defaults to this function
   }),
   fields: {
     file: {}
   }
 })
 
-var Post = mongoose.model('Post', PostSchema)
+const Post = mongoose.model('Post', PostSchema)
 ```
 
 .. then later:
 
 ```javascript
 var post = new Post()
-post.attach('image', {path: '/path/to/image'}, function(error) {
+post.attach('image', {path: '/path/to/image'}, (error) => {
   // file is now attached and post.file is populated e.g.:
   // post.file.url
 })
@@ -45,9 +44,9 @@ post.attach('image', {path: '/path/to/image'}, function(error) {
 
 ```javascript
 var post = new Post()
-var data = []
-post.attach('image', {path: '/path/to/image', data: data}, function(error) {
-  // data is now saved and post.file is populated e.g.:
+var buffer = []
+post.attach('image', {path: '/path/to/image', buffer: buffer}, (error) => {
+  // buffer is now saved and post.file is populated e.g.:
   // post.file.url
 })
 ```
