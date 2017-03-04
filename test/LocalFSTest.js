@@ -187,7 +187,7 @@ describe('LocalFS', () => {
       path: 'node_js_logo.png',
       buffer: fs.readFileSync(sourceFile)
     }, (error, url) => {
-      if(error) {
+      if (error) {
         throw error
       }
 
